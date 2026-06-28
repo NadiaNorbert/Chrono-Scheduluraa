@@ -1,0 +1,45 @@
+# ── Node / Frontend ───────────────────────────────────────────────
+node_modules/
+.next/
+out/
+dist/
+build/
+*.tsbuildinfo
+.npm
+
+# ── Python / Backend ──────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*.pyo
+.venv/
+venv/
+env/
+.env/
+*.egg-info/
+dist/
+.mypy_cache/
+.ruff_cache/
+.pytest_cache/
+htmlcov/
+.coverage
+
+# ── Environment / Secrets ─────────────────────────────────────────
+.env
+.env.local
+.env.*.local
+.env.production
+
+# ── Docker ────────────────────────────────────────────────────────
+docker-compose.override.yml
+
+# ── Editors / OS ──────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/settings.json
+*.swp
+*.swo
+
+# ── Logs ──────────────────────────────────────────────────────────
+*.log
+logs/
