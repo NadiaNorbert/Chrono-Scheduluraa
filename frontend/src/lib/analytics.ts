@@ -1,28 +1,41 @@
 /**
- * [FUTURE M4 — Analytics] Analytics event emitter stub.
- *
- * Replace the no-op implementation with a real analytics provider
- * (PostHog, Segment, Mixpanel, etc.) in Milestone 4.
+ * Analytics API service.
  */
+import { apiClient } from "@/lib/api";
+import type { ProductivityReport, AnalyticsPeriod } from "@/types/analytics";
 
-import type { AnalyticsEvent } from "@/types/analytics";
-
-/**
- * Track a user analytics event.
- *
- * @param event - The analytics event to record.
- */
-export function trackEvent(_event: AnalyticsEvent): void {
-  // TODO: Implement in Milestone 4
-  // e.g. posthog.capture(event.eventName, event.properties)
+function mapReport(r: Record<string, unknown>): ProductivityReport {
+  return {
+    period:            r.period as ProductivityReport["period"],
+    start:             r.start as string,
+    generatedAt:       r.generated_at as string,
+    tasksCreated:      r.tasks_created as number,
+    tasksCompleted:    r.tasks_completed as number,
+    overdueTasks:      r.overdue_tasks as number,
+    completionRate:    r.completion_rate as number,
+    priorityBreakdown: (r.priority_breakdown ?? {}) as Record<string, number>,
+    habitCompletions:  r.habit_completions as number,
+    activeHabits:      r.active_habits as number,
+    habitRate:         r.habit_rate as number,
+    eventsAttended:    r.events_attended as number,
+    meetingMinutes:    r.meeting_minutes as number,
+    dailySeries: ((r.daily_series ?? []) as Record<string, unknown>[]).map((d) => ({
+      date:             d.date as string,
+      tasksCompleted:   d.tasks_completed as number,
+      habitCompletions: d.habit_completions as number,
+    })),
+  };
 }
 
-/**
- * Identify the current user in the analytics provider.
- *
- * @param userId - The Clerk user ID.
- * @param traits - Optional user properties to associate.
- */
+export async function fetchProductivityReport(period: AnalyticsPeriod): Promise<ProductivityReport> {
+  const res = await apiClient.get("/api/v1/analytics/report", { params: { period } });
+  return mapReport(res.data as Record<string, unknown>);
+}
+
+export function trackEvent(_event: import("@/types/analytics").AnalyticsEvent): void {
+  // Wire up PostHog / Segment in production
+}
+
 export function identifyUser(_userId: string, _traits?: Record<string, unknown>): void {
-  // TODO: Implement in Milestone 4
+  // Wire up in production
 }

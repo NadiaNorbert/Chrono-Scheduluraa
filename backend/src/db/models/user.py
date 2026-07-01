@@ -3,7 +3,7 @@
 import uuid
 from datetime import datetime, timezone
 from sqlalchemy import String, DateTime
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 from src.db.base import Base
 
 
@@ -37,6 +37,12 @@ class User(Base):
         onupdate=lambda: datetime.now(timezone.utc),
         nullable=False,
     )
+
+    # Relationships
+    tasks           = relationship("Task",          back_populates="user", lazy="noload", cascade="all, delete-orphan")
+    calendar_events = relationship("CalendarEvent", back_populates="user", lazy="noload", cascade="all, delete-orphan")
+    habits          = relationship("Habit",         back_populates="user", lazy="noload", cascade="all, delete-orphan")
+    goals           = relationship("Goal",          back_populates="user", lazy="noload", cascade="all, delete-orphan")
 
     def __repr__(self) -> str:
         return f"<User id={self.id} email={self.email!r}>"

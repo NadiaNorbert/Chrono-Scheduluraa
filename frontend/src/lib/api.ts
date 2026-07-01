@@ -57,8 +57,14 @@ apiClient.interceptors.response.use(
         window.dispatchEvent(new CustomEvent("auth:unauthorized"));
       }
     } else if (!error.response) {
-      // Network / CORS / timeout error
-      toast.error("Connection error. Please try again.");
+      // Network error — only show toast for explicit user-triggered actions,
+      // not background data-fetching (which falls back to mock data gracefully).
+      // We detect user actions by the presence of a non-GET method.
+      const method = (error.config?.method ?? "get").toLowerCase();
+      if (method !== "get") {
+        toast.error("Connection error. Please check your network.");
+      }
+      // GET failures are silently caught by each hook's fallback — no toast spam.
     }
     return Promise.reject(error);
   }
