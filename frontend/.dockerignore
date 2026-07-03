@@ -1,0 +1,11 @@
+node_modules
+.next
+out
+build
+npm-debug.log
+.DS_Store
+.env
+.env.local
+.env.development
+.env.production
+.env.staging
